@@ -1,3 +1,6 @@
+from data_extraction import data_extractor
+user_data = data_extractor.read_rds_table(db_connector, table_name)
+
 class DataCleaning:
     @staticmethod
     def clean_user_data(user_data):

@@ -2,6 +2,7 @@ import yaml
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy import URL
+from data_cleaning import clean_user_data
 
 class DatabaseConnector:
     @staticmethod
@@ -13,18 +14,13 @@ class DatabaseConnector:
     @staticmethod
     def init_db_engine():
         creds = DatabaseConnector.read_db_creds()
-        if creds:
-            db_url = sqlalchemy.engine.url.URL(
-                drivername='postgresql',
-                username=creds['RDS_USER'],
-                password=creds['RDS_PASSWORD'],
-                host=creds['RDS_HOST'],
-                port=creds['RDS_PORT'],
-                database=creds['RDS_DATABASE']
-            )
-            return create_engine(db_url)
-        else:
-            return None
+        #if creds:
+        db_url = URL.create(drivername='postgresql', username=creds['RDS_USER'],
+                                              password=creds['RDS_PASSWORD'],host=creds['RDS_HOST'],
+                                              port=creds['RDS_PORT'],database=creds['RDS_DATABASE'])
+        create_engine(db_url)
+        #else:
+         #   return None
 
     @staticmethod
     def list_db_tables():
@@ -50,5 +46,5 @@ class DatabaseConnector:
 
 # Now upload the cleaned data to the database
 db_connector = DatabaseConnector()
-table_name = db_connector.list_db_tables()[0]
+table_name = db_connector.list_db_tables()
 db_connector.upload_to_db(cleaned_user_data, 'dim_users')
