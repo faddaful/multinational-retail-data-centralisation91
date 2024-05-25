@@ -1,25 +1,30 @@
 import pandas as pd
-import database_utils
-#from database_utils import DatabaseConnector
+from database_utils import DatabaseConnector
 
 class DataExtractor:
-    @staticmethod
-    def read_data_from_rds(database_connector, table_name):
-        engine = database_connector.init_db_engine()
-        if engine:
-            query = f"SELECT * FROM {table_name}"
-            return pd.read_sql_query(query, engine)
-        else:
-            print("Failed to establish connection to the database.")
-            return None
+    def __init__(self) -> None:
+        pass
 
-    @staticmethod
-    def read_rds_table(database_connector, table_name):
-        if table_name in database_connector.list_db_tables():
-            return database_connector.read_data_from_rds(table_name)
-        else:
-            print(f"Table '{table_name}' not found in the database.")
-            return None
-        
-data_extractor = DataExtractor()
-user_data = data_extractor.read_rds_table(db_connector, table_name)
+    def read_rds_table(self, connector, table_name):
+        engine = connector.init_db_engine()
+        query = f'SELECT * FROM {table_name};'
+        df = pd.read_sql_query(query, engine)
+        return df
+    
+    def list_db_tables(self, connector):
+        return connector.list_db_tables()
+    
+
+# To test if everything is working as it should work
+if __name__ == "__main__":
+
+    connector = DatabaseConnector('db_creds.yaml')
+    extractor = DataExtractor()
+    tables = extractor.list_db_tables(connector)
+    print("Tables in the database:", tables)
+    user_table_name = 'legacy_users'  # To print the actual user data table name in the database
+    user_data_df = extractor.read_rds_table(connector, user_table_name)
+    print("User data DataFrame:")
+    print(user_data_df)
+    column_names = user_data_df.columns
+    print(column_names)

@@ -12,4 +12,4 @@ My first goal will be to produce a system that stores the current company data i
 I will then query the database to get up-to-date metrics for the business.
 
 ### Step 1
-
+To initialise database connection
