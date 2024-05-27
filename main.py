@@ -6,7 +6,7 @@ from data_cleaning import DataCleaning
 def main():
     # Step 1: Initialise DatabaseConnector
     connector = DatabaseConnector('db_creds.yaml')
-    print("Step 1: DatabaseConnector initialized successfully.")
+    print("Step 1: Remote DatabaseConnector initialized successfully.")
 
     # Step 2: Extract data using DataExtractor
     extractor = DataExtractor()
@@ -24,8 +24,23 @@ def main():
     print(cleaned_user_data.head())  # Print the first few rows of cleaned data
 
     # Step 4: Upload cleaned data to database
-    connector.upload_to_db(cleaned_user_data, 'sales_data')
-    print("Step 4: Data uploaded to database successfully.")
+    # Initialize DatabaseConnector with local credentials
+    local_connector = DatabaseConnector('local_db_creds.yaml')
+    
+    # Step 1: List tables to verify read access
+    try:
+        tables = local_connector.list_db_tables(use_local=True)
+        print("Tables in the local database:", tables)
+    except Exception as e:
+        print(f"Error listing tables: {e}")
+
+    try:
+        local_connector.upload_to_db(cleaned_user_data, 'dim_users', use_local=True)
+        print("Data uploaded to local database successfully.")
+    except Exception as e:
+        print(f"Error uploading data: {e}")
+    # connector.upload_to_db(cleaned_user_data, 'dim_users')
+    # print("Step 4: Data uploaded to database successfully.")
 
 if __name__ == "__main__":
     main()
