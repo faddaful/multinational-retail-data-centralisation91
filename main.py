@@ -24,7 +24,7 @@ def main():
     print(cleaned_user_data.head())  # Print the first few rows of cleaned data
 
     # Step 4: Upload cleaned data to database
-    connector.upload_to_db(cleaned_user_data, 'dim_users')
+    connector.upload_to_db(cleaned_user_data, 'sales_data')
     print("Step 4: Data uploaded to database successfully.")
 
 if __name__ == "__main__":

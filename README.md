@@ -13,3 +13,11 @@ I will then query the database to get up-to-date metrics for the business.
 
 ### Step 1
 To initialise database connection
+### Step 2: 
+Extract data using DataExtractor
+
+### Step 3: 
+Clean data using DataCleaning
+
+### Step 4: 
+Upload cleaned data to database
