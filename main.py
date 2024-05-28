@@ -42,6 +42,29 @@ def main():
     # connector.upload_to_db(cleaned_user_data, 'dim_users')
     # print("Step 4: Data uploaded to database successfully.")
 
+
+    # Extracting the pdf data
+    pdf_link = "https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"
+    try:
+        pdf_data_df = extractor.retrieve_pdf_data(pdf_link)
+        print("PDF data extracted successfully.")
+    except Exception as e:
+        print(f"Error extracting data from PDF: {e}")
+
+    # Clean card data using the data cleaning method DataCleaning
+    try:
+        cleaned_pdf_data_df = cleaner.clean_card_data(pdf_data_df)
+        print("Card data cleaned successfully.")
+    except Exception as e:
+        print(f"Error cleaning card data: {e}")
+
+    # Upload cleaned card data to local database in postgres
+    try:
+        local_connector.upload_to_db(cleaned_pdf_data_df, 'dim_card_details', use_local=True)
+        print("Card data uploaded to local database successfully.")
+    except Exception as e:
+        print(f"Error uploading card data: {e}")
+
 if __name__ == "__main__":
     main()
 

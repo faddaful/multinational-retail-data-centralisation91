@@ -1,5 +1,6 @@
 import pandas as pd
 from database_utils import DatabaseConnector
+import tabula
 
 class DataExtractor:
     def __init__(self) -> None:
@@ -11,9 +12,30 @@ class DataExtractor:
         df = pd.read_sql_query(query, engine)
         return df
     
+    # Method to retrieve pdf link for a url
+    def retrieve_pdf_data (self, link):
+        # Extracting data from the pdf
+        dfs = tabula.read_pdf(link, pages = 'all', multiple_tables = True)
+        # Combine all tables into a single dataframe
+        combined_df = pd.concat(dfs, ignore_index = True)
+        return combined_df
+    
     def list_db_tables(self, connector):
         return connector.list_db_tables()
     
+
+# Usage and testing the pdf extraction
+# if __name__ == "__main__":
+#     extractor = DataExtractor()
+#     pdf_link = "https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"
+    
+#     try:
+#         pdf_data_df = extractor.retrieve_pdf_data(pdf_link)
+#         print("PDF data extracted successfully.")
+#         print("Sample data extracted from PDF:")
+#         print(pdf_data_df.head())  # Print the first few rows of the extracted data
+#     except Exception as e:
+#         print(f"Error extracting data from PDF: {e}")
 
 # To test if everything is working as it should work
 # if __name__ == "__main__":
