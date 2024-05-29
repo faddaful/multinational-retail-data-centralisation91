@@ -52,27 +52,27 @@ class DataExtractor:
         return stores_df
     
 # Test to see if the number of stores will be printed
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    extractor = DataExtractor()
-    headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
-    number_stores_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
+#     extractor = DataExtractor()
+#     headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+#     number_stores_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
   
 
-    try:
-        store_number = extractor.list_number_of_stores(number_stores_endpoint, headers)
-        print(store_number)
-    except Exception as e:
-        print('Error retrieving the number of stores: {e}')
+#     try:
+#         store_number = extractor.list_number_of_stores(number_stores_endpoint, headers)
+#         print(store_number)
+#     except Exception as e:
+#         print('Error retrieving the number of stores: {e}')
     
-    store_details_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}"
+#     store_details_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}"
    
-    try:
-        stores_df = extractor.retrieve_stores_data(number_stores_endpoint, store_details_endpoint, headers)
-        print("Stores data extracted successfully.")
-        print(stores_df.head())  # Display the first few rows of the DataFrame
-    except Exception as e:
-        print(f"Error retrieving stores data: {e}")
+#     try:
+#         stores_df = extractor.retrieve_stores_data(number_stores_endpoint, store_details_endpoint, headers)
+#         print("Stores data extracted successfully.")
+#         print(stores_df.head())  # Display the first few rows of the DataFrame
+#     except Exception as e:
+#         print(f"Error retrieving stores data: {e}")
 
 
 

@@ -32,6 +32,20 @@ class DataCleaning:
 
         return card_data_df
     
+    def clean_store_data(self, stores_df):
+        # Dropping rows with null values
+        stores_df.dropna(inplace = True)
+        # Drop rows where 'opening_date' conversion failed
+        stores_df = stores_df.dropna(subset=['opening_date'])
+        # Convert date columns to datetime format
+        #stores_df['opening_date'] = pd.to_datetime(stores_df['opening_date'], errors = 'coerce')
+       
+        stores_df['store_type'] = stores_df['store_type'].astype(str)
+        stores_df['store_type'] = stores_df['store_type'].str.strip()
+
+
+        return stores_df
+
 
 # Testing phase the cleaned pdf data
 # if __name__ == "__main__":

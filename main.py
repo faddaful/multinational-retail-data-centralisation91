@@ -65,6 +65,38 @@ def main():
     except Exception as e:
         print(f"Error uploading card data: {e}")
 
+    # Extracting the stores data from the API
+    headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+    number_stores_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
+    try:
+        store_number = extractor.list_number_of_stores(number_stores_endpoint, headers)
+        print(store_number)
+    except Exception as e:
+        print('Error retrieving the number of stores: {e}')
+    
+    store_details_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}"
+    try:
+        stores_df = extractor.retrieve_stores_data(number_stores_endpoint, store_details_endpoint, headers)
+        print("Stores data extracted successfully.")
+        print(stores_df.head())  # Display the first few rows of the DataFrame
+    except Exception as e:
+        print(f"Error retrieving stores data: {e}")
+
+
+    # Clean store data using the data cleaning method
+    try:
+        clean_store_data_df = cleaner.clean_store_data(stores_df)
+        print("Stores data cleaned successfully.")
+    except Exception as e:
+        print(f"Error cleaning stores data: {e}")
+
+    # Upload stores data to local database in postgres
+    try:
+        local_connector.upload_to_db(clean_store_data_df, 'dim_store_details', use_local = True)
+        print("Stores data uploaded to database successfully")
+    except Exception as e:
+        print(f"Error uploading stores data: {e}")
+
 if __name__ == "__main__":
     main()
 
