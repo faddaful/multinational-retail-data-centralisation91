@@ -35,15 +35,15 @@ class DataExtractor:
     
 
     def retrieve_stores_data(self, number_stores_endpoint, store_details_endpoint, headers):
-        #number_of_stores = self.list_number_of_stores(number_stores_endpoint, headers)
-        number_of_stores = extractor.list_number_of_stores(number_stores_endpoint, headers)
+        number_of_stores = self.list_number_of_stores(number_stores_endpoint, headers)
         all_stores_data = []
 
     
-        for store_number in range(1, number_of_stores + 1):
+        for store_number in range(0, number_of_stores - 1):
             response = requests.get(store_details_endpoint.format(store_number=store_number), headers=headers)
             if response.status_code == 200:
                 store_data = response.json()
+                #print(store_data)
                 all_stores_data.append(store_data)
             else:
                 response.raise_for_status()
