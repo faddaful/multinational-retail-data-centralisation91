@@ -2,11 +2,14 @@ import pandas as pd
 from database_utils import DatabaseConnector
 import tabula
 import requests
+import boto3
+from io import StringIO, BytesIO
+from urllib.parse import urlparse
 
 class DataExtractor:
     def __init__(self) -> None:
         pass
-
+    # Method to Extract data from rds_table
     def read_rds_table(self, connector, table_name):
         engine = connector.init_db_engine()
         query = f'SELECT * FROM {table_name};'
@@ -50,6 +53,71 @@ class DataExtractor:
 
         stores_df = pd.DataFrame(all_stores_data)
         return stores_df
+    
+    # Extract product details from S3 bucket in AWS
+    def extract_from_s3(self, s3_address):
+        s3 = boto3.client('s3')
+
+        # Extract the bucket name and object key from S3
+        s3_parts = s3_address.replace("s3://", "").split('/')
+        bucket_name = s3_parts.pop(0)
+        object_key = '/'.join(s3_parts)
+
+        # Downloading the file from s3
+        response = s3.get_object(Bucket = bucket_name, Key = object_key)
+        # Reading the file and loading it into a pandas dataframe
+        csv_content = response['Body'].read().decode('utf-8')
+        df = pd.read_csv(StringIO(csv_content))
+        
+        return df
+    
+    def extract_json_from_s3(self, s3_url):
+        # Extract bucket and key from s3_url
+        try:
+            # Parse the S3 URL
+            #parsed_url = urlparse(s3_url)
+            bucket = 'data-handling-public'
+            key = 'date_details.json'
+            # print(parsed_url)
+            # print(bucket)
+            # print(key)
+            
+            # Initialize S3 client
+            s3 = boto3.client('s3')
+            
+            # Get the file from S3
+            response = s3.get_object(Bucket=bucket, Key=key)
+            
+            # Read the content of the file
+            content = response['Body'].read()
+            
+            # Load the JSON content into a DataFrame
+            df = pd.read_json(BytesIO(content))
+            return df
+        except Exception as e:
+            print(f"Error extracting JSON from S3: {e}")
+            return None
+
+# if __name__ == "__main__":
+#     extractor = DataExtractor()
+    # s3_json_url = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+    # json_df = extractor.extract_json_from_s3(s3_json_url)
+    # if json_df is not None:
+    #     print(json_df.head())
+    # else:
+    #     print("Failed to extract JSON data from S3.")
+
+# Testing the s3 extraction to see if it works
+# if __name__ == "__main__":
+#     extractor = DataExtractor()
+#     s3_address = "s3://data-handling-public/products.csv"
+#     try:
+#         products_df = extractor.extract_from_s3(s3_address)
+#         print("Products data extracted successfully.")
+#         print(products_df.head())  # Display the first few rows of the DataFrame
+#     except Exception as e:
+#         print(f"Error extracting data from S3: {e}")
+
     
 # Test to see if the number of stores will be printed
 # if __name__ == "__main__":

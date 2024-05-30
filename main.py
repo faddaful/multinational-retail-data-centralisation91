@@ -97,6 +97,80 @@ def main():
     except Exception as e:
         print(f"Error uploading stores data: {e}")
 
+
+    # Extracting products data from s3 bucket
+    s3_address = "s3://data-handling-public/products.csv"
+    try:
+        products_df = extractor.extract_from_s3(s3_address)
+        print("Products data extracted successfully.")
+        print(products_df.head())  # Display the first few rows of the DataFrame
+    except Exception as e:
+        print(f"Error extracting data from S3: {e}")
+
+    # cleaning the products data
+    try:
+        cleaned_products_df = cleaner.convert_product_weights(products_df)
+        print("Product weights converted successfully.")
+        print(cleaned_products_df)
+
+        cleaned_products_df = cleaner.clean_products_data(cleaned_products_df)
+        print("Product data cleaned successfully.")
+        print(cleaned_products_df)
+    except Exception as e:
+        print(f"Error cleaning product data: {e}")
+
+    # Uploading the products data to the database
+    try:
+        local_connector.upload_to_db(cleaned_products_df, 'dim_products', use_local=True)
+        print("Product data uploaded to local database successfully.")
+    except Exception as e:
+        print(f"Error uploading product data: {e}")
+
+    # Extract Product orders table from AWD RDS 
+    orders_table_name = 'orders_table'
+    orders_data_df = extractor.read_rds_table(connector, orders_table_name)
+    print("Orders table data extracted successfully.")
+    print("First few rows of Orders data extracted:")
+    print(orders_data_df.head())
+
+    # Cleaning the orders table data
+    try:
+        cleaned_orders_data_df = cleaner.clean_orders_table(orders_data_df)
+        print(cleaned_orders_data_df)
+        print('Orders data cleaned successfully')
+    except Exception as e:
+        print(f"Error cleaning Orders data: {e}")
+    
+    # Uploading the orders table data to the database
+    try:
+        local_connector.upload_to_db(cleaned_orders_data_df, 'orders_table', use_local=True)
+        print("Orders data uploaded to local database successfully!")
+    except Exception as e:
+        print(f"Error Uploading to orders data to local database: {e}")
+
+    # Extracting date event data from s3 bucket
+    s3_json_url = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+    json_df = extractor.extract_json_from_s3(s3_json_url)
+    if json_df is not None:
+        print(json_df.head())
+    else:
+        print("Failed to extract JSON data from S3.")
+
+    # Cleaning the Extracted JSON file from s3
+    try:
+        cleaned_date_data = cleaner.clean_date_data(json_df)
+        print(cleaned_date_data)
+    except Exception as e:
+        print(f"Error cleaning date event data: {e}")
+
+    # Uploading the date event data to the local database
+    try:
+        local_connector.upload_to_db(cleaned_date_data, 'dim_date_times', use_local=True)
+        print("Date event data uploaded to local database successfully")
+    except Exception as e:
+        print(f"Error uploading date event data to database: {e}")
+
+
 if __name__ == "__main__":
     main()
 
