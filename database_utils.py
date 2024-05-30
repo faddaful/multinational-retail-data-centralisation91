@@ -21,8 +21,6 @@ class DatabaseConnector:
                 f"postgresql://{creds['RDS_USER']}:{creds['RDS_PASSWORD']}@{creds['RDS_HOST']}:{creds['RDS_PORT']}/{creds['RDS_DATABASE']}"
             )
         return engine
-        # engine = create_engine(f"postgresql://{creds['RDS_USER']}:{creds['RDS_PASSWORD']}@{creds['RDS_HOST']}:{creds['RDS_PORT']}/{creds['RDS_DATABASE']}")
-        # return engine
     
     def list_db_tables(self, use_local = False):
         engine = self.init_db_engine(use_local)
