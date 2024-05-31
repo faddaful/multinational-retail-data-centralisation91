@@ -39,8 +39,6 @@ def main():
         print("Data uploaded to local database successfully.")
     except Exception as e:
         print(f"Error uploading data: {e}")
-    # connector.upload_to_db(cleaned_user_data, 'dim_users')
-    # print("Step 4: Data uploaded to database successfully.")
 
 
     # Extracting the pdf data
