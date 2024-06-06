@@ -71,7 +71,7 @@ class DataExtractor:
         
         return df
     
-    def extract_json_from_s3(self, s3_url):
+    def extract_json_from_s3(self, s3_json_url):
         # Extract bucket and key from s3_url
         try:
             # Parse the S3 URL
@@ -98,14 +98,14 @@ class DataExtractor:
             print(f"Error extracting JSON from S3: {e}")
             return None
 
-# if __name__ == "__main__":
-#     extractor = DataExtractor()
-    # s3_json_url = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
-    # json_df = extractor.extract_json_from_s3(s3_json_url)
-    # if json_df is not None:
-    #     print(json_df.head())
-    # else:
-    #     print("Failed to extract JSON data from S3.")
+if __name__ == "__main__":
+    extractor = DataExtractor()
+    s3_json_url = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+    json_df = extractor.extract_json_from_s3(s3_json_url)
+    if json_df is not None:
+        print(json_df.head())
+    else:
+        print("Failed to extract JSON data from S3.")
 
 # Testing the s3 extraction to see if it works
 # if __name__ == "__main__":

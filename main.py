@@ -90,7 +90,7 @@ def main():
 
     # Upload stores data to local database in postgres
     try:
-        local_connector.upload_to_db(clean_store_data_df, 'dim_store_details', use_local = True)
+        local_connector.upload_to_db(stores_df, 'dim_store_details', use_local = True)
         print("Stores data uploaded to database successfully")
     except Exception as e:
         print(f"Error uploading stores data: {e}")

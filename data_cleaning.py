@@ -37,7 +37,7 @@ class DataCleaning:
         # Dropping rows with null values
         stores_df.dropna(inplace = True)
         # Drop rows where 'opening_date' conversion failed
-        stores_df = stores_df.dropna(subset=['opening_date'])
+        #stores_df = stores_df.dropna(subset=['opening_date'])
         # Convert date columns to datetime format
         #stores_df['opening_date'] = pd.to_datetime(stores_df['opening_date'], errors = 'coerce')
        
