@@ -1,1 +1,4 @@
 *.yaml
+db_creds.yaml
+.vscode
+__pycache__
