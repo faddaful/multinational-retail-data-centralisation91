@@ -2,3 +2,5 @@
 db_creds.yaml
 .vscode
 __pycache__
+/db_creds.yaml
+/*.yaml
